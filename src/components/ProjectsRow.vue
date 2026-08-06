@@ -69,15 +69,24 @@ function scrollToIndex(index: number) {
 // ourselves, then always resolve to exactly one card of movement (or none)
 // once the finger lifts, rather than requiring a swipe past the halfway point.
 const SWIPE_THRESHOLD = 24
+// How far a touch has to move before we decide whether the gesture is a
+// horizontal swipe (ours to handle) or a vertical page scroll (the
+// browser's) — below this it's ambiguous, so we wait.
+const AXIS_LOCK_THRESHOLD = 6
+
 let touchStartX = 0
+let touchStartY = 0
 let touchStartScrollLeft = 0
 let touchStartIndex = 0
 let dragging = false
+let axisLocked: 'x' | 'y' | null = null
 
 function onTouchStart(e: TouchEvent) {
   if (!rowRef.value) return
   dragging = true
+  axisLocked = null
   touchStartX = e.touches[0].clientX
+  touchStartY = e.touches[0].clientY
   touchStartScrollLeft = rowRef.value.scrollLeft
   touchStartIndex = activeIndex.value
 }
@@ -85,6 +94,18 @@ function onTouchStart(e: TouchEvent) {
 function onTouchMove(e: TouchEvent) {
   if (!dragging || !rowRef.value) return
   const deltaX = e.touches[0].clientX - touchStartX
+  const deltaY = e.touches[0].clientY - touchStartY
+
+  if (axisLocked === null) {
+    if (Math.abs(deltaX) < AXIS_LOCK_THRESHOLD && Math.abs(deltaY) < AXIS_LOCK_THRESHOLD) return
+    axisLocked = Math.abs(deltaX) > Math.abs(deltaY) ? 'x' : 'y'
+    if (axisLocked === 'y') {
+      // Vertical intent — back off entirely and let the page scroll natively.
+      dragging = false
+      return
+    }
+  }
+
   rowRef.value.scrollLeft = touchStartScrollLeft - deltaX
   e.preventDefault()
 }
@@ -183,6 +204,9 @@ h2 {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 28px;
+  /* Reserves space for a card's expanded (hovered) description so the row
+     doesn't grow/shrink and bounce the "See all projects" button below it. */
+  min-height: 420px;
 }
 
 .row {
@@ -192,6 +216,9 @@ h2 {
   overflow-y: visible;
   scroll-snap-type: x mandatory;
   touch-action: pan-y;
+  /* Reserves space for the active card's expanded description so the row
+     doesn't grow/shrink and bounce the "See all projects" button below it. */
+  min-height: 496px;
   padding: 24px calc(50% - 120px) 56px;
   -webkit-mask-image: linear-gradient(90deg, transparent, black 28px, black calc(100% - 28px), transparent);
   mask-image: linear-gradient(90deg, transparent, black 28px, black calc(100% - 28px), transparent);
