@@ -54,6 +54,20 @@ const altText = computed(() =>
     z-index: 2;
     position: relative;
   }
+
+  .poster:hover .art {
+    box-shadow:
+      0 0 0 1px var(--border-strong),
+      0 24px 48px -20px oklch(0 0 0 / 0.6);
+  }
+
+  .poster:hover .play {
+    opacity: 1;
+  }
+
+  .poster:hover .info {
+    grid-template-rows: 1fr;
+  }
 }
 
 .art {
@@ -74,7 +88,6 @@ const altText = computed(() =>
   display: block;
 }
 
-.poster:hover .art,
 .art.is-active {
   box-shadow:
     0 0 0 1px var(--border-strong),
@@ -112,10 +125,6 @@ const altText = computed(() =>
   padding: 12px;
 }
 
-.poster:hover .play {
-  opacity: 1;
-}
-
 h3 {
   font-family: var(--font-sans);
   font-size: 15.5px;
@@ -130,7 +139,6 @@ h3 {
   transition: grid-template-rows 0.35s ease;
 }
 
-.poster:hover .info,
 .info.is-active {
   grid-template-rows: 1fr;
 }

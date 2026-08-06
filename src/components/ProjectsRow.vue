@@ -53,6 +53,55 @@ function onWheel(e: WheelEvent) {
   rowRef.value.scrollLeft += e.deltaY
 }
 
+function scrollToIndex(index: number) {
+  const row = rowRef.value
+  const card = row?.children[index] as HTMLElement | undefined
+  if (!row || !card) return
+  const target = card.offsetLeft - (row.clientWidth - card.clientWidth) / 2
+  row.scrollTo({ left: target, behavior: 'smooth' })
+}
+
+// Relying on native touch scrolling here doesn't work: once the finger
+// lifts, the browser's own scroll-snap "spring back" animation races our
+// scrollToIndex() call and wins, undoing it. So we take over the drag
+// entirely — `touch-action: pan-y` on the row stops the browser from
+// handling horizontal touch gestures at all, and we move scrollLeft
+// ourselves, then always resolve to exactly one card of movement (or none)
+// once the finger lifts, rather than requiring a swipe past the halfway point.
+const SWIPE_THRESHOLD = 24
+let touchStartX = 0
+let touchStartScrollLeft = 0
+let touchStartIndex = 0
+let dragging = false
+
+function onTouchStart(e: TouchEvent) {
+  if (!rowRef.value) return
+  dragging = true
+  touchStartX = e.touches[0].clientX
+  touchStartScrollLeft = rowRef.value.scrollLeft
+  touchStartIndex = activeIndex.value
+}
+
+function onTouchMove(e: TouchEvent) {
+  if (!dragging || !rowRef.value) return
+  const deltaX = e.touches[0].clientX - touchStartX
+  rowRef.value.scrollLeft = touchStartScrollLeft - deltaX
+  e.preventDefault()
+}
+
+function onTouchEnd(e: TouchEvent) {
+  if (!dragging) return
+  dragging = false
+  const deltaX = e.changedTouches[0].clientX - touchStartX
+  let targetIndex = touchStartIndex
+  if (deltaX <= -SWIPE_THRESHOLD) {
+    targetIndex = Math.min(touchStartIndex + 1, selectedProjects.value.length - 1)
+  } else if (deltaX >= SWIPE_THRESHOLD) {
+    targetIndex = Math.max(touchStartIndex - 1, 0)
+  }
+  scrollToIndex(targetIndex)
+}
+
 watch(rowRef, (newRow, oldRow) => {
   oldRow?.removeEventListener('scroll', onRowScroll)
   if (newRow) {
@@ -86,7 +135,16 @@ onBeforeUnmount(() => {
       </div>
     </div>
 
-    <div v-else ref="rowRef" class="row no-scrollbar" data-lenis-prevent-wheel @wheel="onWheel">
+    <div
+      v-else
+      ref="rowRef"
+      class="row no-scrollbar"
+      data-lenis-prevent-wheel
+      @wheel="onWheel"
+      @touchstart="onTouchStart"
+      @touchmove="onTouchMove"
+      @touchend="onTouchEnd"
+    >
       <div v-for="(project, index) in selectedProjects" :key="project.code" class="poster-wrap" v-reveal="index * 80">
         <div class="poster-scale" :class="{ 'is-active': index === activeIndex }">
           <PosterCard :project="project" :active="index === activeIndex" />
@@ -133,6 +191,7 @@ h2 {
   overflow-x: auto;
   overflow-y: visible;
   scroll-snap-type: x mandatory;
+  touch-action: pan-y;
   padding: 24px calc(50% - 120px) 56px;
   -webkit-mask-image: linear-gradient(90deg, transparent, black 28px, black calc(100% - 28px), transparent);
   mask-image: linear-gradient(90deg, transparent, black 28px, black calc(100% - 28px), transparent);
@@ -142,6 +201,7 @@ h2 {
 .poster-wrap {
   flex: 0 0 240px;
   scroll-snap-align: center;
+  scroll-snap-stop: always;
 }
 
 .poster-scale {
