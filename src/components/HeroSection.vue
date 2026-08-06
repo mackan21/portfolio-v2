@@ -1,21 +1,18 @@
 <script setup lang="ts">
-import { computed, inject, ref, watch } from 'vue'
-import { pageReadyKey } from '../composables/pageReady'
+import { computed, onMounted, ref } from 'vue'
 import { lang } from '../composables/useLang'
 
-const pageReady = inject(pageReadyKey, ref(true))
+// Plays immediately on mount rather than waiting for the boot loader to
+// finish: the boot loader already covers the screen while it runs, so the
+// hero paints (and satisfies LCP) while still hidden behind it, with no
+// visible difference once the boot loader fades out.
 const revealed = ref(false)
 
-if (pageReady.value) {
-  revealed.value = true
-} else {
-  const stopWatch = watch(pageReady, (ready) => {
-    if (ready) {
-      revealed.value = true
-      stopWatch()
-    }
+onMounted(() => {
+  requestAnimationFrame(() => {
+    revealed.value = true
   })
-}
+})
 
 const copy = {
   sv: {
