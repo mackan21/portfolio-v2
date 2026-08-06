@@ -1,4 +1,5 @@
 import { createApp } from 'vue'
+import { injectSpeedInsights } from '@vercel/speed-insights'
 import '@fontsource/anton'
 import '@fontsource/ibm-plex-sans/400.css'
 import '@fontsource/ibm-plex-sans/500.css'
@@ -8,5 +9,7 @@ import '@fontsource/ibm-plex-mono/500.css'
 import '@fontsource/ibm-plex-mono/600.css'
 import './style.css'
 import App from './App.vue'
+
+injectSpeedInsights()
 
 createApp(App).mount('#app')
