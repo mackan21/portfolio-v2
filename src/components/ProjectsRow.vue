@@ -226,7 +226,11 @@ h2 {
   gap: 28px;
   overflow-x: auto;
   overflow-y: visible;
-  scroll-snap-type: x mandatory;
+  /* No scroll-snap: touch is fully hand-rolled in JS (see onTouchStart/Move/
+     End below), and the browser's own snap correction was fighting it,
+     causing a small drift on the first/last card. Left in for the wheel
+     fallback would only help pointer users on a narrow window, which isn't
+     the primary case here. */
   touch-action: pan-y;
   /* Reserves space for the active card's expanded description so the row
      doesn't grow/shrink and bounce the "See all projects" button below it. */
@@ -239,8 +243,6 @@ h2 {
 
 .poster-wrap {
   flex: 0 0 240px;
-  scroll-snap-align: center;
-  scroll-snap-stop: always;
 }
 
 .poster-scale {
