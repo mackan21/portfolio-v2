@@ -118,6 +118,17 @@ function onTouchMove(e: TouchEvent) {
     }
   }
 
+  // At the first/last card, dragging further past the edge used to still
+  // nudge scrollLeft a px or two before the browser clamped it, which then
+  // stuck (no spring-back) since it no longer matched the resting position.
+  // Simplest fix: don't touch scrollLeft at all in that case.
+  const atStart = touchStartIndex === 0
+  const atEnd = touchStartIndex === selectedProjects.value.length - 1
+  if ((atStart && deltaX > 0) || (atEnd && deltaX < 0)) {
+    e.preventDefault()
+    return
+  }
+
   rowRef.value.scrollLeft = touchStartScrollLeft - deltaX
   e.preventDefault()
 }
@@ -226,6 +237,10 @@ h2 {
   gap: 28px;
   overflow-x: auto;
   overflow-y: visible;
+  /* Suppresses the browser's own rubber-band/bounce feedback on overscroll —
+     a purely visual effect on some mobile browsers that doesn't show up as
+     a scrollLeft change, so it wouldn't be caught by JS-level guards above. */
+  overscroll-behavior-x: none;
   /* No scroll-snap: touch is fully hand-rolled in JS (see onTouchStart/Move/
      End below), and the browser's own snap correction was fighting it,
      causing a small drift on the first/last card. Left in for the wheel
