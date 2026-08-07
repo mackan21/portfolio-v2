@@ -7,14 +7,16 @@ const copy = {
   sv: {
     eyebrow: 'om mig',
     title: 'Det här är jag',
-    p1: 'Jag tror på att sätta användaren i centrum. Varje projekt jag jobbar med ska kännas anpassat efter vad just de användarna faktiskt behöver, och jag gillar att förvandla idéer till konkreta, genomtänkta lösningar.',
-    p2: 'Jag fokuserar på att bygga snabba, skalbara lösningar som funkar för både användarna och verksamheten bakom. Prestanda och tillgänglighet är alltid högt prioriterat.',
+    p1: 'Jag drivs av att skapa digitala lösningar som gör skillnad för användarna. Jag tycker om att ta en idé från koncept till färdig produkt och hitta lösningar som både är användarvänliga och tekniskt hållbara.',
+    p2: 'När jag utvecklar fokuserar jag på prestanda, tillgänglighet och skalbarhet. Mitt mål är att skriva ren och genomtänkt kod som är enkel att underhålla och som ger en bra upplevelse för både användare och utvecklingsteam.',
+    p3: 'Under min praktik på PostNord fick jag arbeta med moderna frontendlösningar i Vue, där jag utvecklade nya funktioner, förbättrade användarupplevelsen och löste verkliga problem i produktionsmiljö.',
   },
   en: {
     eyebrow: 'about me',
     title: 'This is me',
-    p1: "I believe in putting the user first. Every project I work on should feel tailored to what its users actually need, and I like turning ideas into concrete, well thought out solutions.",
-    p2: "I focus on building fast, scalable solutions that work for both users and the business behind them. Performance and accessibility are always a priority.",
+    p1: "I'm driven by creating digital solutions that make a real difference for users. I enjoy taking an idea from concept to finished product, finding solutions that are both user-friendly and technically sound.",
+    p2: "When I build, I focus on performance, accessibility and scalability. My goal is to write clean, well thought out code that's easy to maintain and gives both users and the development team a good experience.",
+    p3: "During my internship at Postnord, I worked with modern frontend solutions in Vue, where I developed new features, improved the user experience and solved real problems in a production environment.",
   },
 }
 
@@ -28,6 +30,7 @@ const t = computed(() => copy[lang.value])
       <h2>{{ t.title }}</h2>
       <p>{{ t.p1 }}</p>
       <p>{{ t.p2 }}</p>
+      <p>{{ t.p3 }}</p>
     </div>
   </section>
 </template>
