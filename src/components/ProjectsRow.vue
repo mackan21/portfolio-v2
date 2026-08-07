@@ -57,6 +57,18 @@ function scrollToIndex(index: number) {
   const row = rowRef.value
   const card = row?.children[index] as HTMLElement | undefined
   if (!row || !card) return
+  // The centering formula below can land a px or two off the browser's true
+  // scroll boundary due to subpixel rounding, which made the first/last card
+  // feel like it could still nudge slightly past the end. At the actual
+  // ends, snap to the real boundary instead of the computed center.
+  if (index === 0) {
+    row.scrollTo({ left: 0, behavior: 'smooth' })
+    return
+  }
+  if (index === selectedProjects.value.length - 1) {
+    row.scrollTo({ left: row.scrollWidth - row.clientWidth, behavior: 'smooth' })
+    return
+  }
   const target = card.offsetLeft - (row.clientWidth - card.clientWidth) / 2
   row.scrollTo({ left: target, behavior: 'smooth' })
 }
