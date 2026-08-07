@@ -96,8 +96,19 @@ export const episodes: Episode[] = [
     type: 'education',
   },
   {
-    id: 'iths',
+    id: 'willys',
     number: { sv: 'AVSNITT 02', en: 'EPISODE 02' },
+    period: { sv: '2019 — nu', en: '2019 — Present' },
+    place: { sv: 'Willys', en: 'Willys' },
+    description: {
+      sv: 'Jobbar heltid medan jag söker mitt första jobb som frontendutvecklare.',
+      en: 'Working full-time while looking for my first job as a frontend developer.',
+    },
+    type: 'work',
+  },
+  {
+    id: 'iths',
+    number: { sv: 'AVSNITT 03', en: 'EPISODE 03' },
     period: { sv: '2024 — 2026', en: '2024 — 2026' },
     place: { sv: 'IT-Högskolan, Stockholm', en: 'IT-Högskolan, Stockholm' },
     description: {
@@ -108,7 +119,7 @@ export const episodes: Episode[] = [
   },
   {
     id: 'postnord-1',
-    number: { sv: 'AVSNITT 03', en: 'EPISODE 03' },
+    number: { sv: 'AVSNITT 04', en: 'EPISODE 04' },
     period: { sv: 'aug 2025 — okt 2025', en: 'Aug 2025 — Oct 2025' },
     place: { sv: 'Postnord — Frontendutvecklare (praktik)', en: 'PostNord — Frontend Developer (Internship)' },
     description: {
@@ -119,23 +130,12 @@ export const episodes: Episode[] = [
   },
   {
     id: 'postnord-2',
-    number: { sv: 'AVSNITT 04', en: 'EPISODE 04' },
+    number: { sv: 'AVSNITT 05', en: 'EPISODE 05' },
     period: { sv: 'jan 2026 — jun 2026', en: 'Jan 2026 — Jun 2026' },
     place: { sv: 'Postnord — Frontendutvecklare (praktik)', en: 'PostNord — Frontend Developer (Internship)' },
     description: {
       sv: 'Andra praktikperioden. Vidareutvecklade Postnord Business Portal i nära samarbete med design- och utvecklingsteamet.',
       en: 'Second internship period. Further developed the PostNord Business Portal in close collaboration with the design and development team.',
-    },
-    type: 'work',
-  },
-  {
-    id: 'willys',
-    number: { sv: 'AVSNITT 05', en: 'EPISODE 05' },
-    period: { sv: '2026 —', en: '2026 —' },
-    place: { sv: 'Willys', en: 'Willys' },
-    description: {
-      sv: 'Jobbar deltid medan jag söker mitt första jobb som frontendutvecklare.',
-      en: 'Working part-time while looking for my first job as a frontend developer.',
     },
     type: 'work',
   },

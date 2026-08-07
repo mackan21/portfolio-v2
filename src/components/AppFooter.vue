@@ -1,15 +1,10 @@
 <script setup lang="ts">
-import { computed } from 'vue'
-import { lang } from '../composables/useLang'
-
 const year = new Date().getFullYear()
-const tagline = computed(() => (lang.value === 'sv' ? 'Byggd med Vue & TypeScript' : 'Built with Vue & TypeScript'))
 </script>
 
 <template>
   <footer class="app-footer divider">
     <span class="mono">© {{ year }} Marcus Mikko</span>
-    <span class="mono">{{ tagline }}</span>
   </footer>
 </template>
 
